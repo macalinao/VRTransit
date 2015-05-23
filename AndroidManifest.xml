@@ -16,13 +16,13 @@
 
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.gearvrf.solarsystem"
+    package="pw.ian.vrtransit"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -31,7 +31,7 @@
         android:theme="@style/AppTheme" >
         <meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
         <activity
-            android:name="org.gearvrf.solarsystem.SolarActivity"
+            android:name="pw.ian.vrtransit.MainActivity"
             android:screenOrientation="landscape"
             android:label="@string/app_name" >
             <intent-filter>

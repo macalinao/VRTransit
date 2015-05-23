@@ -14,13 +14,13 @@
  */
 
 
-package org.gearvrf.solarsystem;
+package pw.ian.vrtransit;
 
 import android.os.Bundle;
 
 import org.gearvrf.GVRActivity;
 
-public class SolarActivity extends GVRActivity {
+public class MainActivity extends GVRActivity {
 	
     @Override
     protected void onCreate(Bundle icicle) {

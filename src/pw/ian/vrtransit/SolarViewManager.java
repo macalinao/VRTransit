@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package org.gearvrf.solarsystem;
+package pw.ian.vrtransit;
 
 import java.io.IOException;
 import java.util.ArrayList;
