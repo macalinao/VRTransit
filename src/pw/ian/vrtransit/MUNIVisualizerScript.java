@@ -13,15 +13,16 @@ import org.gearvrf.GVRBitmapTexture;
 import org.gearvrf.GVRCameraRig;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMesh;
-import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
 import org.gearvrf.animation.GVRAnimation;
 import org.gearvrf.animation.GVRRelativeMotionAnimation;
+import org.gearvrf.scene_objects.GVRTextViewSceneObject;
 
 import pw.ian.vrtransit.data.BusUpdate;
 import pw.ian.vrtransit.data.TransitDataAccessor;
+import android.graphics.Color;
 import android.util.Log;
 
 public class MUNIVisualizerScript extends GVRScript {
@@ -58,10 +59,14 @@ public class MUNIVisualizerScript extends GVRScript {
 		GVRScene scene = ctx.getMainScene();
 		scene.setFrustumCulling(true);
 
+		float r = 126f / 255f;
+		float g = 192 / 255f;
+		float b = 238 / 255f;
+
 		scene.getMainCameraRig().getLeftCamera()
-				.setBackgroundColor(0.0f, 0.0f, 0.0f, 1.0f);
+				.setBackgroundColor(r, g, b, 1.0f);
 		scene.getMainCameraRig().getRightCamera()
-				.setBackgroundColor(0.0f, 0.0f, 0.0f, 1.0f);
+				.setBackgroundColor(r, g, b, 1.0f);
 		scene.getMainCameraRig().getOwnerObject().getTransform()
 				.setPosition(0f, 0f, 0f);
 
