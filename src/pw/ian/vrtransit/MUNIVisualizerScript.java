@@ -109,8 +109,10 @@ public class MUNIVisualizerScript extends GVRScript {
 					vehicles.remove(key);
 				}
 				if (bu.getType().equals("train")) {
+					bus.getTransform().setScale(0.15f, 0.05f, 0.05f);
 					bus.getRenderData().getMaterial().setMainTexture(trainTex);
 				} else {
+					bus.getTransform().setScale(0.05f, 0.05f, 0.05f);
 					bus.getRenderData().getMaterial().setMainTexture(busTex);
 				}
 				vehicles.put(bu.getId(), bus);
@@ -134,7 +136,6 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private GVRSceneObject constructBus(GVRContext ctx) {
 		GVRSceneObject bus = new GVRSceneObject(ctx, busMesh, busTex);
-		bus.getTransform().setScale(0.05f, 0.05f, 0.05f);
 		root.addChildObject(bus);
 		return bus;
 	}
