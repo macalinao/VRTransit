@@ -60,7 +60,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		scene.getMainCameraRig().getOwnerObject().getTransform()
 				.setPosition(0f, 0f, 0f);
 
-		busMesh = ctx.loadMesh(new GVRAndroidResource(ctx, "sphere.obj"));
+		busMesh = ctx.loadMesh(new GVRAndroidResource(ctx, "cube.obj"));
 
 		busTex = ctx.loadTexture(new GVRAndroidResource(ctx, "bus.jpg"));
 		busTex.setKeepWrapper(true);
@@ -77,7 +77,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		map.getTransform().setPosition(0f, 0f, -5f);
 		root.addChildObject(map);
 
-		initBusObjectPool(100);
+		initBusObjectPool(Constants.MAX_OBJECTS);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class MUNIVisualizerScript extends GVRScript {
 	}
 
 	private float scaleCoordX(float val, float extent) {
-		return -scaleCoord(37.702100f, 37.814604f, val, extent);
+		return scaleCoord(37.702100f, 37.814604f, val, extent);
 	}
 
 	private float scaleCoordY(float val, float extent) {

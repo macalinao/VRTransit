@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import pw.ian.vrtransit.Constants;
+
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -12,7 +14,7 @@ import com.firebase.client.Query;
 
 public class TransitDataAccessor {
 	private Query ref = new Firebase(
-			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles").limitToLast(100);
+			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles").limitToLast(Constants.MAX_OBJECTS);
 
 	private ArrayBlockingQueue<BusUpdate> pendingUpdates = new ArrayBlockingQueue<>(
 			10000);
