@@ -64,7 +64,7 @@ public class MUNIVisualizerScript extends GVRScript {
 //		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 50f);
 		
 		bus.getTransform().setPosition((float) lat, (float) lon, -4f);
-		bus.getTransform().setScale(0.3f, 0.3f, 0.3f);
+		bus.getTransform().setScale(0.06f, 0.06f, 0.06f);
 		return bus;
 	}
 	
