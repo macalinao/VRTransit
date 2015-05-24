@@ -25,6 +25,6 @@ public class MainActivity extends GVRActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setScript(new SolarViewManager(), "gvr_note4.xml");
+        setScript(new MUNIVisualizerScript(), "gvr_note4.xml");
     }
 }
