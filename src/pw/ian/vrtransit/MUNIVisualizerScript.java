@@ -1,5 +1,6 @@
 package pw.ian.vrtransit;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.gearvrf.animation.GVRRelativeMotionAnimation;
 
 import pw.ian.vrtransit.data.BusUpdate;
 import pw.ian.vrtransit.data.TransitDataAccessor;
+import android.util.Log;
 
 public class MUNIVisualizerScript extends GVRScript {
 
@@ -128,7 +130,7 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private void initBusObjectPool(int amt) {
 		for (int i = 0; i < amt; i++) {
-			busPool.add(constructBus(mCtx));
+			busPool.add(setBusPos(constructBus(mCtx), 0f, 0f));
 		}
 	}
 
@@ -205,21 +207,41 @@ public class MUNIVisualizerScript extends GVRScript {
 	float zc;
 
 	public void handleTap() {
+		Log.i("VRTransit", "Event fired");
 		GVRCameraRig rig = mCtx.getMainScene().getMainCameraRig();
 		if (zoom) {
-			float dist = GVRPicker.pickSceneObject(map, rig);
-			if (dist > 10f)
-				return;
 			float[] look = rig.getLookAt();
 
-			xc = look[0] * dist * 0.8f;
-			yc = look[1] * dist * 0.8f;
-			zc = look[2] * dist * 0.8f;
+			if (look[2] >= 0) {
+				Log.i("VRTransit", "Not facing: " + Arrays.toString(look));
+				return;
+			}
+			float ratio = Constants.DIST / look[2];
 
-			GVRAnimation anim = new GVRRelativeMotionAnimation(rig.getOwnerObject(), 1.0f, xc, yc, zc);
+			float xct = look[0] * ratio * Constants.ZOOM_FACTOR;
+			float yct = look[1] * ratio * Constants.ZOOM_FACTOR;
+			float zct = Constants.DIST * Constants.ZOOM_FACTOR;
+
+			float distSq = xct * xct + yct * yct + zct * zct;
+			if (distSq > Constants.MAX_DIST_SQ) {
+				Log.i("VRTransit", "Too far: " + distSq + " vs "
+						+ Constants.MAX_DIST_SQ);
+				return;
+			}
+
+			xc = xct;
+			yc = yct;
+			zc = zct;
+
+			Log.i("VRTransit", "Move to " + xc + " " + yc + " " + zc);
+
+			GVRAnimation anim = new GVRRelativeMotionAnimation(
+					rig.getOwnerObject(), 1.0f, xc, yc, zc);
 			anim.start(mCtx.getAnimationEngine());
 		} else {
-			GVRAnimation anim = new GVRRelativeMotionAnimation(rig.getOwnerObject(), 1.0f, -xc, -yc, -zc);
+			Log.i("VRTransit", "Move to " + -xc + " " + -yc + " " + -zc);
+			GVRAnimation anim = new GVRRelativeMotionAnimation(
+					rig.getOwnerObject(), 1.0f, -xc, -yc, -zc);
 			anim.start(mCtx.getAnimationEngine());
 		}
 		zoom = !zoom;

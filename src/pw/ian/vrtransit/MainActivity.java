@@ -19,6 +19,7 @@ package pw.ian.vrtransit;
 import org.gearvrf.GVRActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.firebase.client.Firebase;
@@ -33,10 +34,12 @@ public class MainActivity extends GVRActivity {
         Firebase.setAndroidContext(this);
         s = new MUNIVisualizerScript(this);
         setScript(s, "gvr_note4.xml");
+        Log.i("VRTransit", "Init application");
     }
     
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.i("VRTransit", "Touch received");
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             lastDownTime = event.getDownTime();
         }
