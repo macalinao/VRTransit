@@ -212,9 +212,9 @@ public class MUNIVisualizerScript extends GVRScript {
 				return;
 			float[] look = rig.getLookAt();
 
-			xc = look[0] * dist;
-			yc = look[1] * dist;
-			zc = look[2] * dist + 2f;
+			xc = look[0] * dist * 0.8f;
+			yc = look[1] * dist * 0.8f;
+			zc = look[2] * dist * 0.8f;
 
 			GVRAnimation anim = new GVRRelativeMotionAnimation(rig.getOwnerObject(), 1.0f, xc, yc, zc);
 			anim.start(mCtx.getAnimationEngine());
