@@ -29,7 +29,7 @@ public class TransitDataAccessor {
 
 			@Override
 			public void onChildAdded(DataSnapshot ds, String key) {
-				int id = ds.child("id").getValue(Integer.class);
+				String id = ds.child("id").getValue(String.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
@@ -39,7 +39,7 @@ public class TransitDataAccessor {
 
 			@Override
 			public void onChildChanged(DataSnapshot ds, String prevKey) {
-				int id = ds.child("id").getValue(Integer.class);
+				String id = ds.child("id").getValue(String.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
@@ -55,7 +55,7 @@ public class TransitDataAccessor {
 
 			@Override
 			public void onChildRemoved(DataSnapshot ds) {
-				int id = ds.child("id").getValue(Integer.class);
+				String id = ds.child("id").getValue(String.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);

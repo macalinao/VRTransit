@@ -13,6 +13,8 @@ import org.gearvrf.GVRContext;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
+import org.gearvrf.animation.GVRAnimation;
+import org.gearvrf.animation.GVRRelativeMotionAnimation;
 
 import pw.ian.vrtransit.data.BusUpdate;
 import pw.ian.vrtransit.data.TransitDataAccessor;
@@ -33,7 +35,7 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private GVRSceneObject root;
 
-	private Map<Integer, GVRSceneObject> buses = new HashMap<>();
+	private Map<String, GVRSceneObject> buses = new HashMap<>();
 
 	public MUNIVisualizerScript(MainActivity core) {
 		this.core = core;
@@ -80,15 +82,15 @@ public class MUNIVisualizerScript extends GVRScript {
 					GVRSceneObject bus = buses.remove(bu.getId());
 				} else {
 					GVRSceneObject bus = buses.get(bu.getId());
-					setBusPos(bus, bu.getLat(), bu.getLon());
+					smoothSetBusPos(bus, bu.getLat(), bu.getLon());
 				}
 				
 			} else {
 				GVRSceneObject bus = setBusPos(nextBus(), bu.getLat(),
 						bu.getLon());
 				if (buses.containsValue(bus)) {
-					int key = 0;
-					for (Entry<Integer, GVRSceneObject> e : buses.entrySet()) {
+					String key = null;
+					for (Entry<String, GVRSceneObject> e : buses.entrySet()) {
 						if (e.getValue().equals(bus)) {
 							key = e.getKey();
 							break;
@@ -118,6 +120,19 @@ public class MUNIVisualizerScript extends GVRScript {
 		GVRSceneObject bus = new GVRSceneObject(ctx, busMesh, busTex);
 		bus.getTransform().setScale(0.05f, 0.05f, 0.05f);
 		root.addChildObject(bus);
+		return bus;
+	}
+	
+	public GVRSceneObject smoothSetBusPos(GVRSceneObject bus, double lat, double lon) {
+
+		// 37.809607, -122.387515
+		// 37.734027, -122.514716
+
+		float dx = scaleCoord(37.734027f, 37.809607f, (float) lat, 5f) - bus.getTransform().getPositionX();
+		float dy = scaleCoord(-122.514716f, -122.387515f, (float) lon, 5f) - bus.getTransform().getPositionY();
+		
+		GVRAnimation anim = new GVRRelativeMotionAnimation(bus, 1.0f, dx, dy, 0f);
+		anim.start(mCtx.getAnimationEngine());
 		return bus;
 	}
 
