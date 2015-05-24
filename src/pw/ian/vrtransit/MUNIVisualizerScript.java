@@ -12,7 +12,7 @@ import org.gearvrf.GVRTexture;
 import org.gearvrf.scene_objects.GVRCylinderSceneObject;
 
 public class MUNIVisualizerScript extends GVRScript {
-
+	
 	private MainActivity core;
 	
 	private GVRAndroidResource busMesh;
@@ -52,8 +52,33 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private GVRSceneObject constructBus(GVRContext ctx, double lat, double lon) {
 		GVRSceneObject bus = new GVRSceneObject(ctx, busMesh, busTex);
+		
+		//37.809607, -122.387515
+		//37.734027, -122.514716
+
+		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 50f);
+		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 50f);
+		
 		bus.getTransform().setPosition((float) lat, -50f, (float) lon);
 		bus.getTransform().setScale(2.5f, 2.5f, 2.5f);
 		return bus;
+	}
+	
+	/**
+	 * Scales a coordinate
+	 * 
+	 * @param min
+	 * @param max
+	 * @param val
+	 * @param extent
+	 * @return
+	 */
+	private float scaleCoord(float min, float max, float val, float extent) {
+		float fmin = Math.min(min, max);
+		float fmax = Math.max(min, max);
+		
+		float diff = fmax - fmin;
+		float scale = (val - fmin) / diff;
+		return (extent * 2 * scale) - extent;
 	}
 }

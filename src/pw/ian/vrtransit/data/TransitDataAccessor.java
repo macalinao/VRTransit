@@ -8,6 +8,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 
 public class TransitDataAccessor {
 	private Firebase ref = new Firebase(
@@ -54,6 +55,11 @@ public class TransitDataAccessor {
 			}
 		});
 
+	}
+	
+	public List<BusUpdate> initVehicles() {
+		Query q = ref.limitToLast(200);
+		return null;
 	}
 
 	public List<BusUpdate> nextUpdates() {
