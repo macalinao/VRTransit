@@ -10,6 +10,7 @@ import java.util.Queue;
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRBitmapTexture;
 import org.gearvrf.GVRContext;
+import org.gearvrf.GVRMesh;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
@@ -25,9 +26,9 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private GVRContext mCtx;
 
-	private GVRAndroidResource busMesh;
+	private GVRMesh busMesh;
 
-	private GVRAndroidResource busTex;
+	private GVRBitmapTexture busTex;
 
 	private GVRBitmapTexture mapTex;
 
@@ -57,8 +58,9 @@ public class MUNIVisualizerScript extends GVRScript {
 		scene.getMainCameraRig().getOwnerObject().getTransform()
 				.setPosition(0f, 0f, 0f);
 
-		busMesh = new GVRAndroidResource(ctx, "sphere.obj");
-		busTex = new GVRAndroidResource(ctx, "bus.jpg");
+		busMesh = ctx.loadMesh(new GVRAndroidResource(ctx, "sphere.obj"));
+		busTex = ctx.loadTexture(new GVRAndroidResource(ctx, "bus.jpg"));
+		busTex.setKeepWrapper(true);
 
 		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map2.jpg"));
 
