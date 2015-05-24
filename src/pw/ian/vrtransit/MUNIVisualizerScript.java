@@ -30,13 +30,15 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private GVRBitmapTexture busTex;
 
+	private GVRBitmapTexture trainTex;
+
 	private GVRBitmapTexture mapTex;
 
 	private TransitDataAccessor tda;
 
 	private GVRSceneObject root;
 
-	private Map<String, GVRSceneObject> buses = new HashMap<>();
+	private Map<String, GVRSceneObject> vehicles = new HashMap<>();
 
 	public MUNIVisualizerScript(MainActivity core) {
 		this.core = core;
@@ -59,8 +61,12 @@ public class MUNIVisualizerScript extends GVRScript {
 				.setPosition(0f, 0f, 0f);
 
 		busMesh = ctx.loadMesh(new GVRAndroidResource(ctx, "sphere.obj"));
+
 		busTex = ctx.loadTexture(new GVRAndroidResource(ctx, "bus.jpg"));
 		busTex.setKeepWrapper(true);
+
+		trainTex = ctx.loadTexture(new GVRAndroidResource(ctx, "train.jpg"));
+		trainTex.setKeepWrapper(true);
 
 		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map2.jpg"));
 
@@ -78,29 +84,36 @@ public class MUNIVisualizerScript extends GVRScript {
 	public void onStep() {
 		List<BusUpdate> bs = tda.nextUpdates();
 		for (BusUpdate bu : bs) {
-			if (buses.containsKey(bu.getId())) {
+			if (bu.getRoute().equals("25"))
+				continue;
+			if (vehicles.containsKey(bu.getId())) {
 
 				if (bu.remove) {
-					GVRSceneObject bus = buses.remove(bu.getId());
+					GVRSceneObject bus = vehicles.remove(bu.getId());
 				} else {
-					GVRSceneObject bus = buses.get(bu.getId());
+					GVRSceneObject bus = vehicles.get(bu.getId());
 					smoothSetBusPos(bus, bu.getLat(), bu.getLon());
 				}
 
 			} else {
 				GVRSceneObject bus = setBusPos(nextBus(), bu.getLat(),
 						bu.getLon());
-				if (buses.containsValue(bus)) {
+				if (vehicles.containsValue(bus)) {
 					String key = null;
-					for (Entry<String, GVRSceneObject> e : buses.entrySet()) {
+					for (Entry<String, GVRSceneObject> e : vehicles.entrySet()) {
 						if (e.getValue().equals(bus)) {
 							key = e.getKey();
 							break;
 						}
 					}
-					buses.remove(key);
+					vehicles.remove(key);
 				}
-				buses.put(bu.getId(), bus);
+				if (bu.getType().equals("train")) {
+					bus.getRenderData().getMaterial().setMainTexture(trainTex);
+				} else {
+					bus.getRenderData().getMaterial().setMainTexture(busTex);
+				}
+				vehicles.put(bu.getId(), bus);
 			}
 		}
 	}
@@ -137,7 +150,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		float dy = scaleCoordY((float) lon, 5f)
 				- bus.getTransform().getPositionY();
 
-		GVRAnimation anim = new GVRRelativeMotionAnimation(bus, 3.0f, dx, dy,
+		GVRAnimation anim = new GVRRelativeMotionAnimation(bus, 1.0f, dx, dy,
 				0f);
 		anim.start(mCtx.getAnimationEngine());
 		return bus;
@@ -169,7 +182,7 @@ public class MUNIVisualizerScript extends GVRScript {
 
 		float diff = fmax - fmin;
 		float scale = (val - fmin) / diff;
-		return (extent * 2 * scale) - extent;
+		return ((extent * 2 * scale) - extent) * 0.8f;
 	}
 
 	private float scaleCoordX(float val, float extent) {

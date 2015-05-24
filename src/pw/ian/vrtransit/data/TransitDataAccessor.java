@@ -33,7 +33,7 @@ public class TransitDataAccessor {
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
-				String type = ds.child("type").getValue(String.class);
+				String type = ds.child("vtype").getValue(String.class);
 				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
@@ -43,7 +43,7 @@ public class TransitDataAccessor {
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
-				String type = ds.child("type").getValue(String.class);
+				String type = ds.child("vtype").getValue(String.class);
 				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
@@ -59,18 +59,13 @@ public class TransitDataAccessor {
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
-				String type = ds.child("type").getValue(String.class);
+				String type = ds.child("vtype").getValue(String.class);
 				BusUpdate bu = new BusUpdate(id, route, lat, lon, type);
 				bu.remove = true;
 				pendingUpdates.add(bu);
 			}
 		});
 
-	}
-	
-	public List<BusUpdate> initVehicles() {
-		Query q = ref.limitToLast(200);
-		return null;
 	}
 
 	public List<BusUpdate> nextUpdates() {
