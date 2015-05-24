@@ -1,8 +1,10 @@
 package pw.ian.vrtransit;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRBitmapTexture;
@@ -64,8 +66,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		map.getTransform().setPosition(0f, 0f, -5f);
 		root.addChildObject(map);
 
-		root.addChildObject(constructBus(ctx, 0f, 0f));
-
+		initBusObjectPool(100);
 	}
 
 	@Override
@@ -73,38 +74,50 @@ public class MUNIVisualizerScript extends GVRScript {
 		List<BusUpdate> bs = tda.nextUpdates();
 		for (BusUpdate bu : bs) {
 			if (buses.containsKey(bu.getId())) {
-
+				
 				if (bu.remove) {
 					GVRSceneObject bus = buses.remove(bu.getId());
-					root.removeChildObject(bus);
 				} else {
 					GVRSceneObject bus = buses.get(bu.getId());
 					setBusPos(bus, bu.getLat(), bu.getLon());
 				}
-
+				
 			} else {
-				GVRSceneObject bus = constructBus(mCtx, bu.getLat(),
+				GVRSceneObject bus = setBusPos(nextBus(), bu.getLat(),
 						bu.getLon());
-				root.addChildObject(bus);
 			}
 		}
 	}
-
-	private GVRSceneObject constructBus(GVRContext ctx, double lat, double lon) {
-		GVRSceneObject bus = new GVRSceneObject(ctx, busMesh, busTex);
-		setBusPos(bus, lat, lon);
-		bus.getTransform().setScale(0.06f, 0.06f, 0.06f);
+	
+	private Queue<GVRSceneObject> busPool = new LinkedList<>();
+	private void initBusObjectPool(int amt) {
+		for (int i = 0; i < amt; i++) {
+			busPool.add(constructBus(mCtx));
+		}
+	}
+	
+	private GVRSceneObject nextBus() {
+		GVRSceneObject bus = busPool.poll();
+		busPool.add(bus);
 		return bus;
 	}
 
-	public void setBusPos(GVRSceneObject bus, double lat, double lon) {
+	private GVRSceneObject constructBus(GVRContext ctx) {
+		GVRSceneObject bus = new GVRSceneObject(ctx, busMesh, busTex);
+		bus.getTransform().setScale(0.05f, 0.05f, 0.05f);
+		root.addChildObject(bus);
+		return bus;
+	}
+
+	public GVRSceneObject setBusPos(GVRSceneObject bus, double lat, double lon) {
 
 		// 37.809607, -122.387515
 		// 37.734027, -122.514716
 
-		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 10f);
-		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 10f);
+		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 5f);
+		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 5f);
 		bus.getTransform().setPosition((float) lat, (float) lon, -4f);
+		return bus;
 	}
 
 	/**
