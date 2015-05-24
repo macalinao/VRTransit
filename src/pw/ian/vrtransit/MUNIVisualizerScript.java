@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.gearvrf.GVRAndroidResource;
@@ -85,6 +86,17 @@ public class MUNIVisualizerScript extends GVRScript {
 			} else {
 				GVRSceneObject bus = setBusPos(nextBus(), bu.getLat(),
 						bu.getLon());
+				if (buses.containsValue(bus)) {
+					int key = 0;
+					for (Entry<Integer, GVRSceneObject> e : buses.entrySet()) {
+						if (e.getValue().equals(bus)) {
+							key = e.getKey();
+							break;
+						}
+					}
+					buses.remove(key);
+				}
+				buses.put(bu.getId(), bus);
 			}
 		}
 	}
