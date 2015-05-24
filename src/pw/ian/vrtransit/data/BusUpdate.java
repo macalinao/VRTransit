@@ -1,6 +1,8 @@
 package pw.ian.vrtransit.data;
 
 public class BusUpdate {
+	private int id;
+
 	private String route;
 
 	private double lat;
@@ -8,14 +10,19 @@ public class BusUpdate {
 	private double lon;
 
 	private String type;
-	
+
 	public boolean remove = false;
 
-	public BusUpdate(String route, double lat, double lon, String type) {
+	public BusUpdate(int id, String route, double lat, double lon, String type) {
+		this.id = id;
 		this.route = route;
 		this.lat = lat;
 		this.lon = lon;
 		this.type = type;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getRoute() {

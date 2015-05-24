@@ -29,20 +29,22 @@ public class TransitDataAccessor {
 
 			@Override
 			public void onChildAdded(DataSnapshot ds, String key) {
+				int id = ds.child("id").getValue(Integer.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("type").getValue(String.class);
-				pendingUpdates.add(new BusUpdate(route, lat, lon, type));
+				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
 			@Override
 			public void onChildChanged(DataSnapshot ds, String prevKey) {
+				int id = ds.child("id").getValue(Integer.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("type").getValue(String.class);
-				pendingUpdates.add(new BusUpdate(route, lat, lon, type));
+				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
 			@Override
@@ -53,11 +55,12 @@ public class TransitDataAccessor {
 
 			@Override
 			public void onChildRemoved(DataSnapshot ds) {
+				int id = ds.child("id").getValue(Integer.class);
 				String route = ds.child("routeTag").getValue(String.class);
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("type").getValue(String.class);
-				BusUpdate bu = new BusUpdate(route, lat, lon, type);
+				BusUpdate bu = new BusUpdate(id, route, lat, lon, type);
 				bu.remove = true;
 				pendingUpdates.add(bu);
 			}
