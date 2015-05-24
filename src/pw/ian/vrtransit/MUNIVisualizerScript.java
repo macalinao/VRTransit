@@ -1,15 +1,11 @@
 package pw.ian.vrtransit;
 
-import java.util.concurrent.Future;
-
 import org.gearvrf.GVRAndroidResource;
+import org.gearvrf.GVRBitmapTexture;
 import org.gearvrf.GVRContext;
-import org.gearvrf.GVRMaterial;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
-import org.gearvrf.GVRTexture;
-import org.gearvrf.scene_objects.GVRCylinderSceneObject;
 
 public class MUNIVisualizerScript extends GVRScript {
 	
@@ -18,6 +14,8 @@ public class MUNIVisualizerScript extends GVRScript {
 	private GVRAndroidResource busMesh;
 	
 	private GVRAndroidResource busTex;
+	
+	private GVRBitmapTexture mapTex;
 
 	public MUNIVisualizerScript(MainActivity core) {
 		this.core = core;
@@ -39,10 +37,16 @@ public class MUNIVisualizerScript extends GVRScript {
 		busMesh = new GVRAndroidResource(ctx, "sphere.obj");
 		busTex = new GVRAndroidResource(ctx, "bus.jpg");
 		
+		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map2.jpg"));
+		
 		GVRSceneObject root = new GVRSceneObject(ctx);
 		scene.addSceneObject(root);
 
-		root.addChildObject(constructBus(ctx, 22f, 0f));
+		GVRSceneObject map = new GVRSceneObject(ctx, 10f, 10f, mapTex);
+		map.getTransform().setPosition(0f, 0f, -5f);
+		root.addChildObject(map);
+		
+		root.addChildObject(constructBus(ctx, 0f, 0f));
 
 	}
 
@@ -56,11 +60,11 @@ public class MUNIVisualizerScript extends GVRScript {
 		//37.809607, -122.387515
 		//37.734027, -122.514716
 
-		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 50f);
-		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 50f);
+//		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 50f);
+//		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 50f);
 		
-		bus.getTransform().setPosition((float) lat, -50f, (float) lon);
-		bus.getTransform().setScale(2.5f, 2.5f, 2.5f);
+		bus.getTransform().setPosition((float) lat, (float) lon, -4f);
+		bus.getTransform().setScale(0.3f, 0.3f, 0.3f);
 		return bus;
 	}
 	
