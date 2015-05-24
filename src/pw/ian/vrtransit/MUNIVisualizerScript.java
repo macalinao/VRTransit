@@ -7,6 +7,8 @@ import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
 
+import pw.ian.vrtransit.data.TransitDataAccessor;
+
 public class MUNIVisualizerScript extends GVRScript {
 	
 	private MainActivity core;
@@ -16,6 +18,8 @@ public class MUNIVisualizerScript extends GVRScript {
 	private GVRAndroidResource busTex;
 	
 	private GVRBitmapTexture mapTex;
+	
+	private TransitDataAccessor tda;
 
 	public MUNIVisualizerScript(MainActivity core) {
 		this.core = core;
@@ -23,6 +27,8 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	@Override
 	public void onInit(GVRContext ctx) throws Throwable {
+		
+		tda = new TransitDataAccessor();
 
 		GVRScene scene = ctx.getMainScene();
 		scene.setFrustumCulling(true);

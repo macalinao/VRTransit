@@ -20,11 +20,14 @@ import android.os.Bundle;
 
 import org.gearvrf.GVRActivity;
 
+import com.firebase.client.Firebase;
+
 public class MainActivity extends GVRActivity {
 	
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        Firebase.setAndroidContext(this);
         setScript(new MUNIVisualizerScript(this), "gvr_note4.xml");
     }
 }
