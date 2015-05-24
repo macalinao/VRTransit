@@ -28,9 +28,12 @@ public class TransitDataAccessor {
 			}
 
 			@Override
-			public void onChildAdded(DataSnapshot arg0, String arg1) {
-				// TODO Auto-generated method stub
-
+			public void onChildAdded(DataSnapshot ds, String key) {
+				String route = ds.child("routeTag").getValue(String.class);
+				double lat = ds.child("lat").getValue(Double.class);
+				double lon = ds.child("lon").getValue(Double.class);
+				String type = ds.child("type").getValue(String.class);
+				pendingUpdates.add(new BusUpdate(route, lat, lon, type));
 			}
 
 			@Override
@@ -49,9 +52,14 @@ public class TransitDataAccessor {
 			}
 
 			@Override
-			public void onChildRemoved(DataSnapshot arg0) {
-				// TODO Auto-generated method stub
-
+			public void onChildRemoved(DataSnapshot ds) {
+				String route = ds.child("routeTag").getValue(String.class);
+				double lat = ds.child("lat").getValue(Double.class);
+				double lon = ds.child("lon").getValue(Double.class);
+				String type = ds.child("type").getValue(String.class);
+				BusUpdate bu = new BusUpdate(route, lat, lon, type);
+				bu.remove = true;
+				pendingUpdates.add(bu);
 			}
 		});
 

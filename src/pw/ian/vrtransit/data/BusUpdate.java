@@ -8,6 +8,8 @@ public class BusUpdate {
 	private double lon;
 
 	private String type;
+	
+	public boolean remove = false;
 
 	public BusUpdate(String route, double lat, double lon, String type) {
 		this.route = route;
