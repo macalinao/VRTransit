@@ -12,7 +12,7 @@ import com.firebase.client.Query;
 
 public class TransitDataAccessor {
 	private Query ref = new Firebase(
-			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles").limitToLast(200);
+			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles").limitToLast(100);
 
 	private ArrayBlockingQueue<BusUpdate> pendingUpdates = new ArrayBlockingQueue<>(
 			10000);

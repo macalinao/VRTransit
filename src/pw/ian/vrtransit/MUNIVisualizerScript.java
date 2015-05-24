@@ -77,14 +77,14 @@ public class MUNIVisualizerScript extends GVRScript {
 		List<BusUpdate> bs = tda.nextUpdates();
 		for (BusUpdate bu : bs) {
 			if (buses.containsKey(bu.getId())) {
-				
+
 				if (bu.remove) {
 					GVRSceneObject bus = buses.remove(bu.getId());
 				} else {
 					GVRSceneObject bus = buses.get(bu.getId());
 					smoothSetBusPos(bus, bu.getLat(), bu.getLon());
 				}
-				
+
 			} else {
 				GVRSceneObject bus = setBusPos(nextBus(), bu.getLat(),
 						bu.getLon());
@@ -102,14 +102,15 @@ public class MUNIVisualizerScript extends GVRScript {
 			}
 		}
 	}
-	
+
 	private Queue<GVRSceneObject> busPool = new LinkedList<>();
+
 	private void initBusObjectPool(int amt) {
 		for (int i = 0; i < amt; i++) {
 			busPool.add(constructBus(mCtx));
 		}
 	}
-	
+
 	private GVRSceneObject nextBus() {
 		GVRSceneObject bus = busPool.poll();
 		busPool.add(bus);
@@ -122,16 +123,20 @@ public class MUNIVisualizerScript extends GVRScript {
 		root.addChildObject(bus);
 		return bus;
 	}
-	
-	public GVRSceneObject smoothSetBusPos(GVRSceneObject bus, double lat, double lon) {
+
+	public GVRSceneObject smoothSetBusPos(GVRSceneObject bus, double lat,
+			double lon) {
 
 		// 37.809607, -122.387515
 		// 37.734027, -122.514716
 
-		float dx = scaleCoord(37.734027f, 37.809607f, (float) lat, 5f) - bus.getTransform().getPositionX();
-		float dy = scaleCoord(-122.514716f, -122.387515f, (float) lon, 5f) - bus.getTransform().getPositionY();
-		
-		GVRAnimation anim = new GVRRelativeMotionAnimation(bus, 1.0f, dx, dy, 0f);
+		float dx = scaleCoordX((float) lat, 5f)
+				- bus.getTransform().getPositionX();
+		float dy = scaleCoordY((float) lon, 5f)
+				- bus.getTransform().getPositionY();
+
+		GVRAnimation anim = new GVRRelativeMotionAnimation(bus, 3.0f, dx, dy,
+				0f);
 		anim.start(mCtx.getAnimationEngine());
 		return bus;
 	}
@@ -141,9 +146,9 @@ public class MUNIVisualizerScript extends GVRScript {
 		// 37.809607, -122.387515
 		// 37.734027, -122.514716
 
-		lat = scaleCoord(37.734027f, 37.809607f, (float) lat, 5f);
-		lon = scaleCoord(-122.514716f, -122.387515f, (float) lon, 5f);
-		bus.getTransform().setPosition((float) lat, (float) lon, -4f);
+		lat = scaleCoordX((float) lat, 5f);
+		lon = scaleCoordY((float) lon, 5f);
+		bus.getTransform().setPosition((float) lat, (float) lon, -5f);
 		return bus;
 	}
 
@@ -163,5 +168,13 @@ public class MUNIVisualizerScript extends GVRScript {
 		float diff = fmax - fmin;
 		float scale = (val - fmin) / diff;
 		return (extent * 2 * scale) - extent;
+	}
+
+	private float scaleCoordX(float val, float extent) {
+		return -scaleCoord(37.702100f, 37.814604f, val, extent);
+	}
+
+	private float scaleCoordY(float val, float extent) {
+		return scaleCoord(-122.553643f, -122.35528f, val, extent);
 	}
 }
