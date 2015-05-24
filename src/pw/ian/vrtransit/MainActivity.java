@@ -23,8 +23,8 @@ import org.gearvrf.GVRActivity;
 public class MainActivity extends GVRActivity {
 	
     @Override
-    protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         setScript(new SolarViewManager(), "gvr_note4.xml");
     }
 }
