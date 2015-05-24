@@ -48,6 +48,8 @@ public class MainActivity extends GVRActivity {
             // check if it was a quick tap
             if (event.getEventTime() - lastDownTime < 200) {
             	s.handleTap();
+            } else {
+            	s.handleLongPress();
             }
         }
 

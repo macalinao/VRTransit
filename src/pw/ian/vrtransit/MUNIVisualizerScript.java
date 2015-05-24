@@ -54,7 +54,6 @@ public class MUNIVisualizerScript extends GVRScript {
 	public void onInit(GVRContext ctx) throws Throwable {
 
 		mCtx = ctx;
-		tda = new TransitDataAccessor();
 
 		GVRScene scene = ctx.getMainScene();
 		scene.setFrustumCulling(true);
@@ -74,7 +73,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		trainTex = ctx.loadTexture(new GVRAndroidResource(ctx, "train.jpg"));
 		trainTex.setKeepWrapper(true);
 
-		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map2.jpg"));
+		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map.jpg"));
 
 		root = new GVRSceneObject(ctx);
 		scene.addSceneObject(root);
@@ -84,6 +83,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		root.addChildObject(map);
 
 		initBusObjectPool(Constants.MAX_OBJECTS);
+		initVehicles();
 	}
 
 	@Override
@@ -130,8 +130,13 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private void initBusObjectPool(int amt) {
 		for (int i = 0; i < amt; i++) {
-			busPool.add(setBusPos(constructBus(mCtx), 0f, 0f));
+			busPool.add(resetPos(constructBus(mCtx)));
 		}
+	}
+
+	private GVRSceneObject resetPos(GVRSceneObject bus) {
+		bus.getTransform().setPosition(-1000f, -1000f, -1000f);
+		return bus;
 	}
 
 	private GVRSceneObject nextBus() {
@@ -207,12 +212,12 @@ public class MUNIVisualizerScript extends GVRScript {
 	float zc;
 
 	GVRAnimation zoomAnim;
-	
+
 	public void handleTap() {
 		if (zoomAnim != null && !zoomAnim.isFinished()) {
 			return;
 		}
-		
+
 		Log.i("VRTransit", "Event fired");
 		GVRCameraRig rig = mCtx.getMainScene().getMainCameraRig();
 		if (zoom) {
@@ -241,15 +246,34 @@ public class MUNIVisualizerScript extends GVRScript {
 
 			Log.i("VRTransit", "Move to " + xc + " " + yc + " " + zc);
 
-			zoomAnim = new GVRRelativeMotionAnimation(
-					rig.getOwnerObject(), 1.0f, xc, yc, zc);
+			zoomAnim = new GVRRelativeMotionAnimation(rig.getOwnerObject(),
+					1.0f, xc, yc, zc);
 			zoomAnim.start(mCtx.getAnimationEngine());
 		} else {
 			Log.i("VRTransit", "Move to " + -xc + " " + -yc + " " + -zc);
-			zoomAnim = new GVRRelativeMotionAnimation(
-					rig.getOwnerObject(), 1.0f, -xc, -yc, -zc);
+			zoomAnim = new GVRRelativeMotionAnimation(rig.getOwnerObject(),
+					1.0f, -xc, -yc, -zc);
 			zoomAnim.start(mCtx.getAnimationEngine());
 		}
 		zoom = !zoom;
+	}
+
+	String type = "bus";
+
+	public void handleLongPress() {
+		if (type.equals("bus")) {
+			type = "train";
+		} else {
+			type = "bus";
+		}
+		initVehicles();
+	}
+
+	public void initVehicles() {
+		for (Entry<String, GVRSceneObject> e : vehicles.entrySet()) {
+			resetPos(e.getValue());
+		}
+		vehicles.clear();
+		tda = new TransitDataAccessor(type);
 	}
 }

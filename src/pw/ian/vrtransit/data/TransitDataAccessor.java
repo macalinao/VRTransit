@@ -14,12 +14,16 @@ import com.firebase.client.Query;
 
 public class TransitDataAccessor {
 	private Query ref = new Firebase(
-			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles").limitToLast(Constants.MAX_OBJECTS);
+			"https://publicdata-transit.firebaseio.com/sf-muni/vehicles")
+			.limitToLast(Constants.MAX_OBJECTS);
 
 	private ArrayBlockingQueue<BusUpdate> pendingUpdates = new ArrayBlockingQueue<>(
 			10000);
 
-	public TransitDataAccessor() {
+	private String type;
+
+	public TransitDataAccessor(String type) {
+		this.type = type;
 
 		ref.addChildEventListener(new ChildEventListener() {
 
@@ -36,6 +40,8 @@ public class TransitDataAccessor {
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("vtype").getValue(String.class);
+				if (!type.equals(TransitDataAccessor.this.type))
+					return;
 				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
@@ -46,6 +52,8 @@ public class TransitDataAccessor {
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("vtype").getValue(String.class);
+				if (!type.equals(TransitDataAccessor.this.type))
+					return;
 				pendingUpdates.add(new BusUpdate(id, route, lat, lon, type));
 			}
 
@@ -62,6 +70,8 @@ public class TransitDataAccessor {
 				double lat = ds.child("lat").getValue(Double.class);
 				double lon = ds.child("lon").getValue(Double.class);
 				String type = ds.child("vtype").getValue(String.class);
+				if (!type.equals(TransitDataAccessor.this.type))
+					return;
 				BusUpdate bu = new BusUpdate(id, route, lat, lon, type);
 				bu.remove = true;
 				pendingUpdates.add(bu);
