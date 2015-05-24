@@ -18,10 +18,11 @@ import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
 import org.gearvrf.animation.GVRAnimation;
 import org.gearvrf.animation.GVRRelativeMotionAnimation;
+import org.gearvrf.scene_objects.GVRTextViewSceneObject;
 
 import pw.ian.vrtransit.data.BusUpdate;
 import pw.ian.vrtransit.data.TransitDataAccessor;
-import android.location.Location;
+import android.graphics.Color;
 import android.util.Log;
 
 public class MUNIVisualizerScript extends GVRScript {
@@ -43,7 +44,6 @@ public class MUNIVisualizerScript extends GVRScript {
 	private GVRSceneObject root;
 
 	private GVRSceneObject map;
-	private GVRSceneObject me;
 
 	private Map<String, GVRSceneObject> vehicles = new HashMap<>();
 
@@ -80,25 +80,12 @@ public class MUNIVisualizerScript extends GVRScript {
 
 		mapTex = ctx.loadTexture(new GVRAndroidResource(ctx, "map.jpg"));
 
-		GVRBitmapTexture meTex = ctx.loadTexture(new GVRAndroidResource(ctx,
-				"mercurymap.jpg"));
-
 		root = new GVRSceneObject(ctx);
 		scene.addSceneObject(root);
 
 		map = new GVRSceneObject(ctx, 10f, 10f, mapTex);
 		map.getTransform().setPosition(0f, 0f, -5f);
 		root.addChildObject(map);
-
-//		me = new GVRSceneObject(ctx, busMesh, meTex);
-//		me.getTransform().setScale(0.05f, 0.05f, 0.6f);
-//
-//		float lat = scaleCoordX((float) l.getLatitude(), 5f);
-//		float lon = scaleCoordY((float) l.getLongitude(), 5f);
-//		Log.i("VRTransit", "position is " + lat + ", " + lon);
-//		me.getTransform().setPosition(lat, lon, -5f);
-
-		root.addChildObject(me);
 
 		initBusObjectPool(Constants.MAX_OBJECTS);
 		initVehicles();
@@ -142,12 +129,6 @@ public class MUNIVisualizerScript extends GVRScript {
 				vehicles.put(bu.getId(), bus);
 			}
 		}
-	}
-
-	private Location l;
-
-	public void updateLocation(Location l) {
-		this.l = l;
 	}
 
 	private Queue<GVRSceneObject> busPool = new LinkedList<>();
