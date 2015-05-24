@@ -9,8 +9,10 @@ import java.util.Queue;
 
 import org.gearvrf.GVRAndroidResource;
 import org.gearvrf.GVRBitmapTexture;
+import org.gearvrf.GVRCameraRig;
 import org.gearvrf.GVRContext;
 import org.gearvrf.GVRMesh;
+import org.gearvrf.GVRPicker;
 import org.gearvrf.GVRScene;
 import org.gearvrf.GVRSceneObject;
 import org.gearvrf.GVRScript;
@@ -37,6 +39,8 @@ public class MUNIVisualizerScript extends GVRScript {
 	private TransitDataAccessor tda;
 
 	private GVRSceneObject root;
+
+	private GVRSceneObject map;
 
 	private Map<String, GVRSceneObject> vehicles = new HashMap<>();
 
@@ -73,7 +77,7 @@ public class MUNIVisualizerScript extends GVRScript {
 		root = new GVRSceneObject(ctx);
 		scene.addSceneObject(root);
 
-		GVRSceneObject map = new GVRSceneObject(ctx, 10f, 10f, mapTex);
+		map = new GVRSceneObject(ctx, 10f, 10f, mapTex);
 		map.getTransform().setPosition(0f, 0f, -5f);
 		root.addChildObject(map);
 
@@ -192,5 +196,32 @@ public class MUNIVisualizerScript extends GVRScript {
 
 	private float scaleCoordY(float val, float extent) {
 		return scaleCoord(-122.553643f, -122.35528f, val, extent);
+	}
+
+	boolean zoom = true;
+
+	float xc;
+	float yc;
+	float zc;
+
+	public void handleTap() {
+		GVRCameraRig rig = mCtx.getMainScene().getMainCameraRig();
+		if (zoom) {
+			float dist = GVRPicker.pickSceneObject(map, rig);
+			if (dist > 10f)
+				return;
+			float[] look = rig.getLookAt();
+
+			xc = look[0] * dist;
+			yc = look[1] * dist;
+			zc = look[2] * dist + 2f;
+
+			GVRAnimation anim = new GVRRelativeMotionAnimation(rig.getOwnerObject(), 1.0f, xc, yc, zc);
+			anim.start(mCtx.getAnimationEngine());
+		} else {
+			GVRAnimation anim = new GVRRelativeMotionAnimation(rig.getOwnerObject(), 1.0f, -xc, -yc, -zc);
+			anim.start(mCtx.getAnimationEngine());
+		}
+		zoom = !zoom;
 	}
 }

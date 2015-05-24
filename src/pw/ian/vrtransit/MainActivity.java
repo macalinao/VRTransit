@@ -16,18 +16,38 @@
 
 package pw.ian.vrtransit;
 
-import android.os.Bundle;
-
 import org.gearvrf.GVRActivity;
+
+import android.os.Bundle;
+import android.view.MotionEvent;
 
 import com.firebase.client.Firebase;
 
 public class MainActivity extends GVRActivity {
+    private long lastDownTime = 0;
+    private MUNIVisualizerScript s;
 	
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Firebase.setAndroidContext(this);
-        setScript(new MUNIVisualizerScript(this), "gvr_note4.xml");
+        s = new MUNIVisualizerScript(this);
+        setScript(s, "gvr_note4.xml");
+    }
+    
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+            lastDownTime = event.getDownTime();
+        }
+
+        if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+            // check if it was a quick tap
+            if (event.getEventTime() - lastDownTime < 200) {
+            	s.handleTap();
+            }
+        }
+
+        return true;
     }
 }
