@@ -206,7 +206,13 @@ public class MUNIVisualizerScript extends GVRScript {
 	float yc;
 	float zc;
 
+	GVRAnimation zoomAnim;
+	
 	public void handleTap() {
+		if (zoomAnim != null && !zoomAnim.isFinished()) {
+			return;
+		}
+		
 		Log.i("VRTransit", "Event fired");
 		GVRCameraRig rig = mCtx.getMainScene().getMainCameraRig();
 		if (zoom) {
@@ -235,14 +241,14 @@ public class MUNIVisualizerScript extends GVRScript {
 
 			Log.i("VRTransit", "Move to " + xc + " " + yc + " " + zc);
 
-			GVRAnimation anim = new GVRRelativeMotionAnimation(
+			zoomAnim = new GVRRelativeMotionAnimation(
 					rig.getOwnerObject(), 1.0f, xc, yc, zc);
-			anim.start(mCtx.getAnimationEngine());
+			zoomAnim.start(mCtx.getAnimationEngine());
 		} else {
 			Log.i("VRTransit", "Move to " + -xc + " " + -yc + " " + -zc);
-			GVRAnimation anim = new GVRRelativeMotionAnimation(
+			zoomAnim = new GVRRelativeMotionAnimation(
 					rig.getOwnerObject(), 1.0f, -xc, -yc, -zc);
-			anim.start(mCtx.getAnimationEngine());
+			zoomAnim.start(mCtx.getAnimationEngine());
 		}
 		zoom = !zoom;
 	}
